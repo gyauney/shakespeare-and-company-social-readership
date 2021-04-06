@@ -37,6 +37,10 @@ Also included is preprocessed data from the UCSD Book Graph.
 - `data/goodreads-book-id-to-text.json`: dict mapping Goodreads book ID to summary string
 - `data/goodreads-user-to-books.json`: dict mapping Goodreads user ID to a list of books the user interacted with
 
+And now there are also files listing the descriptive text for each book:
+- `data/sc-book-names.json`: descriptive text for books in Shakespeare and Company
+- `data/goodreads-book-names.json`: descriptive text for books in Goodreads
+
 [Shakespeare and Company]: https://shakespeareandco.princeton.edu/about/data/
 
 ### Usage
@@ -59,3 +63,16 @@ python3 graph.py --num_groups 10
 
 Note: The community detection algorithm often takes hundreds or even thousands
 of iterations to converge, so it may take a long time to run, but it should be fine on a laptop.
+
+### Example of how to use the graphs
+
+Check out `example.py` for some sample code that shows how to
+1) print summary statistics for the graphs and
+2) find out information about a specific book in the graph.
+As an example, it shows that 'Hippolytus' by Euripides has an edge to only four other books
+in the Shakespeare and Company graph but is connected to 80 books (many of which are 'classics') in the Goodreads graph.
+
+
+
+
+

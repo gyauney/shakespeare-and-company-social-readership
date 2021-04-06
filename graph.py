@@ -287,6 +287,44 @@ def save_vertices_by_group_percents(vertex_to_neighbors, C, K, vertices_in_order
             f.write('Vertex {}: {:.1f}, {:.1f}\n'.format(idx, sorted_vertices_by_group_percents[idx, 0],
                                                           sorted_vertices_by_group_percents[idx, 1]))
 
+# for using the shakespeare and company graph
+# note: indexes vertices by full descriptive text rather than book URI
+def get_sc_graph():
+    # load the full shakespeare and company dataset
+    books, members, events = load_shakespeare_and_company_data('data')
+    # limit to books also in goodreads
+    with open('data/book-uris-in-both-goodreads-and-sc.json', 'r') as f:
+        overlap_book_uris = json.load(f)
+    # get a dict of person to books they borrowed
+    sc_borrower_to_books = get_sc_borrower_to_books(books, events, overlap_book_uris)
+
+    books_in_vertex_order, book_to_vertex_index, edge_to_weight, vertex_to_neighbors, n = create_books_graph(sc_borrower_to_books)
+
+    # and now use more descriptive text for the books
+    book_uri_to_text = map_book_uris_to_text(books)
+    books_in_vertex_order = [book_uri_to_text[goodreads_id] for goodreads_id in books_in_vertex_order]
+    book_to_vertex_index = {text: vertex_idx for vertex_idx, text in enumerate(books_in_vertex_order)}
+
+    return books_in_vertex_order, book_to_vertex_index, edge_to_weight, vertex_to_neighbors, n 
+    
+
+# for using the goodreads graph
+# note: indexes vertices by full descriptive text rather than goodreads id
+def get_goodreads_graph():
+    # get the preprocessed dict of person to books they reviewed
+    with open('data/goodreads-user-to-books.json', 'r') as f:
+        goodreads_user_to_books = json.load(f)
+    books_in_vertex_order, book_to_vertex_index, edge_to_weight, vertex_to_neighbors, n = create_books_graph(goodreads_user_to_books)
+
+    # and now use more descriptive text for the books
+    with open('data/goodreads-book-id-to-text.json', 'r') as f:
+        goodreads_book_id_to_text = json.load(f)
+    books_in_vertex_order = [goodreads_book_id_to_text[goodreads_id] for goodreads_id in books_in_vertex_order]
+    book_to_vertex_index = {text: vertex_idx for vertex_idx, text in enumerate(books_in_vertex_order)}
+
+    return books_in_vertex_order, book_to_vertex_index, edge_to_weight, vertex_to_neighbors, n 
+
+
 def main():
     args = parse_args()
 
