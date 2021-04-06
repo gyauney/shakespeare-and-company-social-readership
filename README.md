@@ -66,9 +66,10 @@ of iterations to converge, so it may take a long time to run, but it should be f
 
 ### Example of how to use the graphs
 
-Check out `example.py` for some sample code that shows how to
-1) print summary statistics for the graphs and
-2) find out information about a specific book in the graph.
+Check out `example.py` for some sample code that shows how to:
+1. Print summary statistics for the graphs
+2. Find out information about a specific book in the graph
+
 As an example, it shows that 'Hippolytus' by Euripides has an edge to only four other books
 in the Shakespeare and Company graph but is connected to 80 books (many of which are 'classics') in the Goodreads graph.
 
