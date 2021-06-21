@@ -28,9 +28,9 @@ and a preprocessed subset of the Goodreads data in the
 
 
 Several data files are included as of now (this will likely be removed in the final version):
-- `data/SCoData_books_v1_2020-07.json`: the [Shakespeare and Company][] books dataset
-- `data/SCoData_members_v1_2020-07.json`: the [Shakespeare and Company][] members dataset
-- `data/SCoData_events_v1_2020-07.json`: the [Shakespeare and Company][] events dataset
+- `data/SCoData_books_v1.1_2021-01.json`: the [Shakespeare and Company][] books dataset
+- `data/SCoData_members_v1.1_2021-01.json`: the [Shakespeare and Company][] members dataset
+- `data/SCoData_events_v1.1_2021-01.json`: the [Shakespeare and Company][] events dataset
 
 Also included is preprocessed data from the UCSD Book Graph.
 - `data/book-uris-in-both-goodreads-and-sc.json`: the URIs of books in both SC and Goodreads
@@ -71,7 +71,7 @@ Check out `example.py` for some sample code that shows how to:
 2. Find out information about a specific book in the graph
 
 As an example, it shows that 'Hippolytus' by Euripides has an edge to only four other books
-in the Shakespeare and Company graph but is connected to 83 books (many of which are 'classics') in the Goodreads graph.
+in the Shakespeare and Company graph but is connected to 85 books (many of which are 'classics') in the Goodreads graph.
 
 
 

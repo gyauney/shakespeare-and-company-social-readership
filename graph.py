@@ -28,11 +28,11 @@ Output:
     events: dict from event URI to event data
 '''
 def load_shakespeare_and_company_data(folder):
-    with open('{}/SCoData_books_v1_2020-07.json'.format(folder), 'r') as f:
+    with open('{}/SCoData_books_v1.1_2021-01.json'.format(folder), 'r') as f:
         books = {book['uri']: book for book in json.load(f)}
-    with open('{}/SCoData_members_v1_2020-07.json'.format(folder), 'r') as f:
+    with open('{}/SCoData_members_v1.1_2021-01.json'.format(folder), 'r') as f:
         members = {member['uri']: member for member in json.load(f)}
-    with open('{}/SCoData_events_v1_2020-07.json'.format(folder), 'r') as f:
+    with open('{}/SCoData_events_v1.1_2021-01.json'.format(folder), 'r') as f:
         events = json.load(f)
     return books, members, events
 
