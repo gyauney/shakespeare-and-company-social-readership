@@ -41,6 +41,10 @@ And now there are also files listing the descriptive text for each book:
 - `data/sc-book-names.json`: descriptive text for books in Shakespeare and Company
 - `data/goodreads-book-names.json`: descriptive text for books in Goodreads
 
+And finally dictionaries linking books across SC and Goodreads:
+- `data/goodreads-book-id-to-sc-uri.json`: dict mapping Goodreads book ID to SC book URI
+- `data/goodreads-text-to-sc-text.json`: dict mapping Goodreads book summary string to SC book summary string
+
 [Shakespeare and Company]: https://shakespeareandco.princeton.edu/about/data/
 
 ### Usage
