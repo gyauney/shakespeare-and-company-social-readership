@@ -32,10 +32,19 @@ Several data files are included as of now (this will likely be removed in the fi
 - `data/SCoData_members_v1.1_2021-01.json`: the [Shakespeare and Company][] members dataset
 - `data/SCoData_events_v1.1_2021-01.json`: the [Shakespeare and Company][] events dataset
 
-Also included is preprocessed data from the UCSD Book Graph.
+We were able to match and manually verify 4460 of the Shakespeare and Company URIs to Goodreads book IDs:
+- `data/goodreads-book-id-to-sc-uri_full-matching.json`: dict mapping Goodreads book ID to SC book URI
+
+We further restrict our analysis to 1511 titles that are 1) in both the Shakespeare and Company dataset and the
+[UCSD Book Graph](https://sites.google.com/eng.ucsd.edu/ucsdbookgraph/home)
+and 2) have at least one neighboring vertex in the graphs we construct.
+All remaining files contain only data for these 1511 titles.
+
+Preprocessed data from the UCSD Book Graph:
 - `data/book-uris-in-both-goodreads-and-sc.json`: the URIs of books in both SC and Goodreads
 - `data/goodreads-book-id-to-text.json`: dict mapping Goodreads book ID to summary string
 - `data/goodreads-user-to-books.json`: dict mapping Goodreads user ID to a list of books the user interacted with
+- `data/goodreads-book-id-to-num-ratings.json`: dict mapping Goodreads book ID to number of user ratings on Goodreads
 
 And now there are also files listing the descriptive text for each book:
 - `data/sc-book-names.json`: descriptive text for books in Shakespeare and Company

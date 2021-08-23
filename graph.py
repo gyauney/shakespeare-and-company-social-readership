@@ -305,7 +305,10 @@ def get_sc_graph():
     books_in_vertex_order = [book_uri_to_text[goodreads_id] for goodreads_id in books_in_vertex_order]
     book_to_vertex_index = {text: vertex_idx for vertex_idx, text in enumerate(books_in_vertex_order)}
 
-    return books_in_vertex_order, book_to_vertex_index, edge_to_weight, vertex_to_neighbors, n 
+    # get popularity
+    sc_book_uri_to_num_events = count_events_per_book_sc(books, members, events)
+
+    return books_in_vertex_order, book_to_vertex_index, edge_to_weight, vertex_to_neighbors, n, sc_book_uri_to_num_events, book_uri_to_text
     
 
 # for using the goodreads graph
@@ -322,8 +325,25 @@ def get_goodreads_graph():
     books_in_vertex_order = [goodreads_book_id_to_text[goodreads_id] for goodreads_id in books_in_vertex_order]
     book_to_vertex_index = {text: vertex_idx for vertex_idx, text in enumerate(books_in_vertex_order)}
 
-    return books_in_vertex_order, book_to_vertex_index, edge_to_weight, vertex_to_neighbors, n 
+    # now get popularity
+    gr_book_id_to_num_ratings = get_goodreads_popularity_num_ratings('data')
 
+    return books_in_vertex_order, book_to_vertex_index, edge_to_weight, vertex_to_neighbors, n, gr_book_id_to_num_ratings, goodreads_book_id_to_text
+
+# count number of events per book in SC
+def count_events_per_book_sc(books, members, events):
+    book_to_num_events = defaultdict(int)
+    for event in events:
+        if event['event_type'] == 'Borrow' or event['event_type'] == 'Purchase':
+            book_uri = event['item']['uri']
+            book_to_num_events[book_uri] += 1
+    return book_to_num_events
+
+# get the number of ratings for matched goodreads books
+def get_goodreads_popularity_num_ratings(folder):
+    with open('data/goodreads-book-id-to-num-ratings.json', 'r') as f:
+        goodreads_book_id_to_num_ratings = json.load(f)
+    return goodreads_book_id_to_num_ratings
 
 def main():
     args = parse_args()
