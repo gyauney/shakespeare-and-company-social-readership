@@ -84,7 +84,7 @@ Check out `example.py` for some sample code that shows how to:
 2. Find out information about a specific book in the graph
 
 As an example, it shows that 'Hippolytus' by Euripides has an edge to only four other books
-in the Shakespeare and Company graph but is connected to 85 books (many of which are 'classics') in the Goodreads graph.
+in the Shakespeare and Company graph but is connected to 68 books (many of which are 'classics') in the Goodreads graph.
 
 
 
