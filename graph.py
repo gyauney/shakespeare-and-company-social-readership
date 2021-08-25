@@ -5,6 +5,7 @@ import csv
 from collections import defaultdict, OrderedDict
 import itertools
 import operator
+import math
 
 from community_detection import get_communities
 
@@ -96,7 +97,7 @@ Input:
 Output:
     borrower_to_books: dict from member URI to the URIs of the books that they borrowed
 '''
-def get_sc_borrower_to_books(books, events, keep_uris):
+def internal_get_sc_borrower_to_books(books, events, keep_uris):
     borrower_to_books = defaultdict(set)
     for event in events:
         if event['event_type'] != 'Borrow':
@@ -159,6 +160,48 @@ def create_books_graph(person_to_books):
         for v in neighbors:
             edge_to_weight[(u, v)] = edge_to_weight_unsorted[(u, v)]
     return books_in_vertex_order, book_to_vertex_index, edge_to_weight, vertex_to_neighbors, n
+
+
+
+def create_books_graph_weighted_by_user(person_to_books):
+    # first create an edge between all pairs of books borrowed/reviewed by the same person
+    # and get all the books that have at least one edge
+    connected_vertices = set()
+    E = []
+    for person, books in person_to_books.items():
+        # users who only interacted with one book don't contribute any edges
+        if len(books) < 2:
+            continue
+        # each user's contribution to edge weights sums to 1
+        user_weight = 1.0 / math.comb(len(books), 2)
+        for book_1, book_2 in itertools.combinations(books, 2):
+            connected_vertices.add(book_1)
+            connected_vertices.add(book_2)
+            E.append((book_1, book_2, user_weight))
+    # in the constructed graph, each book is given an integer index
+    # this is to make the community detection code closer to the paper's code
+    books_in_vertex_order = list(connected_vertices)
+    book_to_vertex_index = {v: i for i, v in enumerate(books_in_vertex_order)}
+    n = len(books_in_vertex_order)
+    edge_to_weight_unsorted = defaultdict(int)
+    vertex_to_neighbors = defaultdict(set)
+    for book_uri_1, book_uri_2, user_weight in E:
+        l = book_to_vertex_index[book_uri_1]
+        r = book_to_vertex_index[book_uri_2]
+        edge_to_weight_unsorted[(l, r)] += user_weight
+        edge_to_weight_unsorted[(r, l)] += user_weight
+        vertex_to_neighbors[l].add(r)
+        vertex_to_neighbors[r].add(l)
+    # a consistent ordering is useful for the community detection code
+    # sort lists of neighbors
+    vertex_to_neighbors = {u: sorted(list(neighbors)) for u, neighbors in vertex_to_neighbors.items()}
+    # sort edges
+    edge_to_weight = OrderedDict()
+    for u, neighbors in vertex_to_neighbors.items():
+        for v in neighbors:
+            edge_to_weight[(u, v)] = edge_to_weight_unsorted[(u, v)]
+    return books_in_vertex_order, book_to_vertex_index, edge_to_weight, vertex_to_neighbors, n
+
 
 '''
 Convert a graph in adjacency matrix format to an adjacency list
@@ -287,6 +330,20 @@ def save_vertices_by_group_percents(vertex_to_neighbors, C, K, vertices_in_order
             f.write('Vertex {}: {:.1f}, {:.1f}\n'.format(idx, sorted_vertices_by_group_percents[idx, 0],
                                                           sorted_vertices_by_group_percents[idx, 1]))
 
+'''
+Maps SC readers to the books they borrowed. For external use.
+
+Output:
+    sc_borrower_to_books: dict mapping reader URI in SC to list of book URIs borrowed
+'''
+def get_sc_borrower_to_books():
+    books, members, events = load_shakespeare_and_company_data('data')
+    # limit to books also in goodreads
+    with open('data/book-uris-in-both-goodreads-and-sc.json', 'r') as f:
+        overlap_book_uris = json.load(f)
+    # get a dict of person to books they borrowed
+    return internal_get_sc_borrower_to_books(books, events, overlap_book_uris)
+
 # for using the shakespeare and company graph
 # note: indexes vertices by full descriptive text rather than book URI
 def get_sc_graph():
@@ -296,7 +353,7 @@ def get_sc_graph():
     with open('data/book-uris-in-both-goodreads-and-sc.json', 'r') as f:
         overlap_book_uris = json.load(f)
     # get a dict of person to books they borrowed
-    sc_borrower_to_books = get_sc_borrower_to_books(books, events, overlap_book_uris)
+    sc_borrower_to_books = internal_get_sc_borrower_to_books(books, events, overlap_book_uris)
 
     books_in_vertex_order, book_to_vertex_index, edge_to_weight, vertex_to_neighbors, n = create_books_graph(sc_borrower_to_books)
 
@@ -379,7 +436,7 @@ def main():
     #       n.b SC and Goodreads contain a different number of connected books,
     #           so the graphs have different numbers of vertices
     # these are dicts from person to books they interacted with
-    sc_borrower_to_books = get_sc_borrower_to_books(books, events, overlap_book_uris)
+    sc_borrower_to_books = internal_get_sc_borrower_to_books(books, events, overlap_book_uris)
     with open('data/goodreads-user-to-books.json', 'r') as f:
         goodreads_user_to_books = json.load(f)
 
