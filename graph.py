@@ -7,17 +7,6 @@ import itertools
 import operator
 import math
 
-from community_detection import get_communities
-
-import argparse
-
-# parse the command-line arguments
-def parse_args():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--num_groups', required=True, type=int)
-    parser.add_argument('--verbose', action='store_true', default=False)
-    return parser.parse_args()
-
 '''
 Load the three parts of the Shakespeare and Company dataset.
 
@@ -56,6 +45,34 @@ def map_book_uris_to_text(books):
             year = ' ({})'.format(books[uri]['year'])
         book_to_text[uri] = '{}{}{}'.format(books[uri]['title'], author, year)
     return book_to_text
+
+'''
+Map each book to its year of publication
+
+Input:
+    books: dict from book URI to book data for Shakespeare and Company
+Output:
+    book_to_year: dict from book URI to year string
+'''
+def map_book_uris_to_year(books):
+    book_to_year = defaultdict(str)
+    for uri, value in books.items():
+        if 'year' in books[uri]:
+            book_to_year[uri] = books[uri]['year']
+    return book_to_year
+
+def map_book_uris_to_author(books):
+    book_to_author = defaultdict(str)
+    for uri, value in books.items():
+        if 'author' in books[uri]:
+            book_to_author[uri] = ' & '.join(books[uri]['author'])
+    return book_to_author
+
+def map_book_uris_to_title(books):
+    book_to_title = defaultdict(str)
+    for uri, value in books.items():
+        book_to_title[uri] = books[uri]['title']
+    return book_to_title
 
 '''
 Save a CSV file in Gephi format--Gephi is an extremely clunky but useful graph visualization program.
@@ -362,10 +379,14 @@ def get_sc_graph():
     books_in_vertex_order = [book_uri_to_text[goodreads_id] for goodreads_id in books_in_vertex_order]
     book_to_vertex_index = {text: vertex_idx for vertex_idx, text in enumerate(books_in_vertex_order)}
 
+    book_uri_to_year = map_book_uris_to_year(books)
+    book_uri_to_title = map_book_uris_to_title(books)
+    book_uri_to_author = map_book_uris_to_author(books)
+
     # get popularity
     sc_book_uri_to_num_events = count_events_per_book_sc(books, members, events)
 
-    return books_in_vertex_order, book_to_vertex_index, edge_to_weight, vertex_to_neighbors, n, sc_book_uri_to_num_events, book_uri_to_text
+    return books_in_vertex_order, book_to_vertex_index, edge_to_weight, vertex_to_neighbors, n, sc_book_uri_to_num_events, book_uri_to_text, book_uri_to_year, book_uri_to_title, book_uri_to_author
     
 
 # for using the goodreads graph
@@ -401,64 +422,3 @@ def get_goodreads_popularity_num_ratings(folder):
     with open('data/goodreads-book-id-to-num-ratings.json', 'r') as f:
         goodreads_book_id_to_num_ratings = json.load(f)
     return goodreads_book_id_to_num_ratings
-
-def main():
-    args = parse_args()
-
-    # Test the community detection algorithm
-    # with the simple "Zachary's Karate Club" dataset.
-    # The vertices get split into two clear groups,
-    # which you can see in the resulting text file 'karate_community-percents.txt'.
-    G = nx.karate_club_graph()
-    A = nx.to_numpy_array(G)
-    vertices_in_order, edge_to_weight, vertex_to_neighbors, n = convert_adjacency_matrix_to_list(A)
-    C = get_communities(edge_to_weight, vertex_to_neighbors, n, 2, 5, False)
-    export_to_gephi(edge_to_weight, vertices_in_order, 'karate', C)
-    save_vertices_by_group_percents(vertex_to_neighbors, C, 2, vertices_in_order, 'karate')
-
-    # load the full shakespeare and company dataset
-    books, members, events = load_shakespeare_and_company_data('data')
-    book_uri_to_text = map_book_uris_to_text(books)
-    
-    # load the books that are present in both Shakespeare and Company and the UCSD Goodreads book graph
-    # these were gotten in a separate preprocessing step
-    with open('data/book-uris-in-both-goodreads-and-sc.json', 'r') as f:
-        overlap_book_uris = json.load(f)
-    # load a dict that maps from Goodreads book id to summary string
-    # this was also constructed in a separate preprocessing step
-    with open('data/goodreads-book-id-to-text.json', 'r') as f:
-        goodreads_book_id_to_text = json.load(f)
-
-    # get the data in the format we need to construct graphs
-    # the lists of books have been pruned to only include:
-    #    1) books that are common to both datasets
-    #    2) books that will have at least one edge in the graphs
-    #       n.b SC and Goodreads contain a different number of connected books,
-    #           so the graphs have different numbers of vertices
-    # these are dicts from person to books they interacted with
-    sc_borrower_to_books = internal_get_sc_borrower_to_books(books, events, overlap_book_uris)
-    with open('data/goodreads-user-to-books.json', 'r') as f:
-        goodreads_user_to_books = json.load(f)
-
-    # Shakespeare and Company: create a graph and run the community detection algorithm
-    dataset = 'shakespeare-and-company_{}-groups'.format(args.num_groups)
-    books_in_vertex_order, book_to_vertex_index, edge_to_weight, vertex_to_neighbors, n = create_books_graph(sc_borrower_to_books)
-    print('Shakespeare and Company, # of vertices: {:,}'.format(n))
-    print('Shakespeare and Company, # of unique edges: {:,}'.format(int(len(edge_to_weight)/2)))
-    C = get_communities(edge_to_weight, vertex_to_neighbors, n, args.num_groups, 1, args.verbose)
-    # save the results in html and gephi format
-    save_html_with_community_summaries(n, edge_to_weight, vertex_to_neighbors, C, args.num_groups, books_in_vertex_order, dataset, book_uri_to_text)
-    export_to_gephi(edge_to_weight, books_in_vertex_order, dataset, C)
-
-    # Goodreads: create a graph and run the community detection algorithm
-    dataset = 'goodreads_{}-groups'.format(args.num_groups)
-    books_in_vertex_order, book_to_vertex_index, edge_to_weight, vertex_to_neighbors, n = create_books_graph(goodreads_user_to_books)
-    print('Goodreads, # of vertices: {:,}'.format(n))
-    print('Goodreads, # of unique edges: {:,}'.format(int(len(edge_to_weight)/2)))
-    C = get_communities(edge_to_weight, vertex_to_neighbors, n, args.num_groups, 1, args.verbose)
-    # save the results in html and gephi format
-    save_html_with_community_summaries(n, edge_to_weight, vertex_to_neighbors, C, args.num_groups, books_in_vertex_order, dataset, goodreads_book_id_to_text)
-    export_to_gephi(edge_to_weight, books_in_vertex_order, dataset, C)
-    
-if __name__ == '__main__':
-    main()
