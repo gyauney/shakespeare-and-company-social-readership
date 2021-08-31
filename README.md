@@ -13,7 +13,7 @@ We additionally consolidated Goodreads metadata for these matched works.
 - `data/goodreads-book-id-to-sc-uri_full-matching.json`: a JSON dictionary mapping Goodreads book ID to SC book URI
 - `data/matched-goodreads-metadata.json`: a JSON list containing a dictionary for each matched Goodreads book. Example metadata keys are the year of publication (`yearFirstPublished`) and number of reviews (`numReviews`).
 
-[Shakespeare and Company]: https://shakespeareandco.princeton.edu/about/data/
+[Shakespeare and Company Project]: https://shakespeareandco.princeton.edu/about/data/
 
 ### Code requirements
 
