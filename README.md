@@ -1,4 +1,4 @@
-# shakespeare-and-company-and-goodreads-networks
+# shakespeare-and-company-online-readership
 
 This repository provides data and implements the network analysis for
 "The Afterlives of Shakespeare and Company in Online Social Readership."
@@ -6,16 +6,16 @@ This repository provides data and implements the network analysis for
 ### Matching Shakespeare and Company with Goodreads
 
 This project contributes a matching between works
-in the [Shakespeare and Company][] Project and works in Goodreads.
+in the [Shakespeare and Company Project][] and works in Goodreads.
 We were able to match and manually verify 4460
-of the Shakespeare and Company URIs to Goodreads book IDs.
+of the Shakespeare and Company book URIs to Goodreads book IDs.
 We additionally consolidated Goodreads metadata for these matched works.
 - `data/goodreads-book-id-to-sc-uri_full-matching.json`: a JSON dictionary mapping Goodreads book ID to SC book URI
 - `data/matched-goodreads-metadata.json`: a JSON list containing a dictionary for each matched Goodreads book. Example metadata keys are the year of publication (`yearFirstPublished`) and number of reviews (`numReviews`).
 
 [Shakespeare and Company]: https://shakespeareandco.princeton.edu/about/data/
 
-### Requirements
+### Code requirements
 
 This code needs Python 3 along with `numpy` and `networkx`.
 You can install the dependencies with:
@@ -26,9 +26,9 @@ pip3 install -r requirements.txt
 It additionally requires Version 1.1 of the data from the
 [Shakespare and Company Project](https://shakespeareandco.princeton.edu/about/data/).
 Please download the following files and place them in the `data` directory:
-- [`SCoData_books_v1.1_2021-01.json`](https://dataspace.princeton.edu/bitstream/88435/dsp016d570067j/3/SCoData_books_v1.1_2021-01.json): the [Shakespeare and Company][] books dataset
-- [`SCoData_members_v1.1_2021-01.json`](https://dataspace.princeton.edu/bitstream/88435/dsp01b5644v608/3/SCoData_members_v1.1_2021-01.json): the [Shakespeare and Company][] members dataset
-- [`SCoData_events_v1.1_2021-01.json`](https://dataspace.princeton.edu/bitstream/88435/dsp012n49t475g/3/SCoData_events_v1.1_2021-01.json): the [Shakespeare and Company][] events dataset
+- [`SCoData_books_v1.1_2021-01.json`](https://dataspace.princeton.edu/bitstream/88435/dsp016d570067j/3/SCoData_books_v1.1_2021-01.json): the Shakespeare and Company books dataset
+- [`SCoData_members_v1.1_2021-01.json`](https://dataspace.princeton.edu/bitstream/88435/dsp01b5644v608/3/SCoData_members_v1.1_2021-01.json): the Shakespeare and Company members dataset
+- [`SCoData_events_v1.1_2021-01.json`](https://dataspace.princeton.edu/bitstream/88435/dsp012n49t475g/3/SCoData_events_v1.1_2021-01.json): the Shakespeare and Company events dataset
 
 
 ### Other included data
