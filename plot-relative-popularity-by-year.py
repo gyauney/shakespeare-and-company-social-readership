@@ -1,10 +1,7 @@
-from graph import get_goodreads_graph, get_sc_graph, \
-                  get_goodreads_popularity_num_ratings, count_events_per_book_sc
-import operator
+from graph import get_goodreads_graph, get_sc_graph
 import json
 import numpy as np
-from scipy import stats
-import statistics
+import math
 
 # don't let matplotlib use xwindows
 import matplotlib
@@ -14,8 +11,6 @@ from matplotlib.pylab import savefig
 import seaborn as sns
 sns.set_style("ticks")
 import pandas as pd
-
-import math
 
 def plot_relative_popularity_by_year():
 
@@ -29,7 +24,7 @@ def plot_relative_popularity_by_year():
         goodreads_book_id_to_sc_uri = json.load(f)
 
     # load newly scraped data
-    df = pd.read_json('data/books.processed.json')
+    df = pd.read_json('data/matched-goodreads-metadata.json')
     gr_book_id_to_scraped_num_reviews = {str(gr_id): num_reviews for gr_id, num_reviews in zip(df['bookID'], df['numReviews'])}
     gr_book_id_to_scraped_year = {str(gr_id): year for gr_id, year in zip(df['bookID'], df['yearFirstPublished'])}
     gr_book_id_to_scraped_title = {str(gr_id): title for gr_id, title in zip(df['bookID'], df['title'])}
@@ -122,13 +117,13 @@ def plot_relative_popularity_by_year():
     savefig('relative-popularity-by-year.png', bbox_inches='tight', dpi=300)
     plt.close()
 
-    # print extremes!
-    print('Most GR:')
-    for i, (ratio, year, title, author, text) in enumerate(sorted(zip(log_ratios, years, titles, authors, sc_texts), reverse=False)[:40]):
-        print('{}\t{}\t{}\t{}'.format(i+1, year, title, author))
-    print('Most SC')
-    for i, (ratio, year, title, author, text) in enumerate(sorted(zip(log_ratios, years, titles, authors, sc_texts), reverse=True)[:40]):
-        print('{}\t{}\t{}\t{}'.format(i+1, year, title, author))
+    # print extreme books
+    print('Most relatively popular in Goodreads:')
+    for i, (ratio, year, title, author, text) in enumerate(sorted(zip(log_ratios, years, titles, authors, sc_texts), reverse=False)[:20]):
+        print('\t{}\t{}\t{}\t{}'.format(i+1, year, title, author))
+    print('Most relatively popular in Shakespeare and Company:')
+    for i, (ratio, year, title, author, text) in enumerate(sorted(zip(log_ratios, years, titles, authors, sc_texts), reverse=True)[:20]):
+        print('\t{}\t{}\t{}\t{}'.format(i+1, year, title, author))
 
 if __name__ == '__main__':
     plot_relative_popularity_by_year()

@@ -1,14 +1,11 @@
-from graph import get_goodreads_graph, get_sc_graph, \
-                  get_goodreads_popularity_num_ratings, count_events_per_book_sc
+from graph import get_goodreads_graph, get_sc_graph
 import operator
 import json
 import numpy as np
 from scipy import stats
 import statistics
 
-import math
-
-# returns a row in the adjacency matrix for a graph
+# constructs a row in the adjacency matrix for a graph
 # requires that vertices have been given a consistent ordering across both graphs
 def get_vertex_adjacency_row(book_name, books_in_vertex_order, book_to_vertex_index, vertex_to_neighbors, edge_to_weight, n, text_to_consistent_ordering):
     adjacency = np.zeros(n)
@@ -85,17 +82,15 @@ def compare_js_divergence():
 
         mean_adjacency = (sc_adjacency + gr_adjacency) / 2
         
-        # look at two specific books
+        # print neighbors for two specific example books
         if sc_uri in ['https://shakespeareandco.princeton.edu/books/faulkner-light-august/',
                       'https://shakespeareandco.princeton.edu/books/wilde-picture-dorian-grey/']:
-            print(sc_uri)
-            print('\tClosest neighbors in Shakespeare and Company:')
+            print('Closest neighbors to {} in Shakespeare and Company:'.format(sc_uri))
             for i, (num_same_borrowers, neighbor_text) in enumerate(sorted(zip(sc_adjacency, sc_text_in_order), reverse=True)[:10]):
-                print('\t{}\t{}\t{}'.format(i, num_same_borrowers, neighbor_text))
-            print('\tClosest neighbors in Goodreads:')
+                print('\t{}\t{}'.format(i, neighbor_text))
+            print('Closest neighbors to {} in Goodreads:'.format(sc_uri))
             for i, (num_same_borrowers, neighbor_text) in enumerate(sorted(zip(gr_adjacency, gr_text_in_order), reverse=True)[:10]):
-                print('\t{}\t{}\t{}'.format(i, num_same_borrowers, neighbor_text))
-
+                print('\t{}\t{}'.format(i, neighbor_text))
 
         # calculate jensen-shannon divergence
         js = 0.5 * np.dot(sc_adjacency, np.log(sc_adjacency/mean_adjacency)) + 0.5 * np.dot(gr_adjacency, np.log(gr_adjacency/mean_adjacency))
@@ -118,11 +113,13 @@ def compare_js_divergence():
     print('Correlation with GR number of neighbors: {:.4f} (p={:.4f})'.format(result.correlation, result.pvalue))
 
     print('Highest Jensen-Shannon divergence:')
+    print('\tRank\tSC neighbors\tGR neighbors\tTitle\tAuthor')
     for i, row in enumerate(sorted(dists, reverse=True)[:20]):
-        print('{}\t{}\t{}\t{}\t{}\t{}\t{}'.format(i+1, row[5], row[6], row[3], row[4], row[9], row[10]))
+        print('\t{}\t{}\t\t{}\t\t{}\t{}'.format(i+1, row[3], row[4], row[9], row[10]))
     print('Lowest Jensen-Shannon divergence:')
+    print('\tRank\tSC neighbors\tGR neighbors\tTitle\tAuthor')
     for i, row in enumerate(sorted(dists, reverse=False)[:20]):
-        print('{}\t{}\t{}\t{}\t{}\t{}\t{}'.format(i+1, row[5], row[6], row[3], row[4], row[9], row[10]))
+        print('\t{}\t\t{}\t\t{}\t{}\t{}'.format(i+1, row[3], row[4], row[9], row[10]))
     print('Number of books in top quartile of popularity in both datasets: {}'.format(len(dists)))
 
 if __name__ == '__main__':

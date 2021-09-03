@@ -1,6 +1,6 @@
 # shakespeare-and-company-online-readership
 
-This repository provides data and implements the network analysis for
+This repository provides data and code to accompany
 "The Afterlives of Shakespeare and Company in Online Social Readership."
 
 ### Matching Shakespeare and Company with Goodreads
@@ -57,7 +57,21 @@ And finally dictionaries linking books across SC and Goodreads:
 - `data/goodreads-text-to-sc-text.json`: dict mapping Goodreads book summary string to SC book summary string
 
 
-### Example of how to use the graphs
+### Reproducing the results in the article
+
+1. **TODO**:
+implements the article section "Comparing Popularity in SC and Goodreads".
+
+2. `plot-relative-popularity-by-year.py`:
+plots the relative popularity across Goodreads and SC, outputting a file named `relative-popularity-by-year.png`.
+
+3. `compare-neighbor-distributions.py`:
+implements the article section "Comparing reading patterns of poular books".
+
+4. `core-periphery-books.ipynb`:
+implements the network centrality analysis in the article section "Comparing network roles of popular books".
+
+### Further example of how to use the graphs
 
 Graphs are constructed for datasets from Shakespeare and Company and Goodreads.
 Vertices correspond to books. Edges correspond to people: two books have an edge
