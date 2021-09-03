@@ -17,8 +17,14 @@ import pandas as pd
 
 import math
 
-def plot_relative_popularity_by_year(sc_books_in_vertex_order, gr_books_in_vertex_order, sc_book_to_vertex_index, gr_book_to_vertex_index, sc_edge_to_weight, gr_edge_to_weight, sc_book_uri_to_num_events, gr_book_id_to_num_ratings, sc_n, gr_n, sc_book_uri_to_text, gr_book_id_to_text, sc_book_uri_to_year, sc_book_uri_to_title, sc_book_uri_to_author):
-    
+def plot_relative_popularity_by_year():
+
+    # get the shakespeare and company graph
+    sc_books_in_vertex_order, sc_book_to_vertex_index, sc_edge_to_weight, sc_vertex_to_neighbors, sc_n, sc_book_uri_to_num_events, sc_book_uri_to_text, sc_book_uri_to_year, sc_book_uri_to_title, sc_book_uri_to_author = get_sc_graph()
+
+    # and now get the goodreads graph
+    gr_books_in_vertex_order, gr_book_to_vertex_index, gr_edge_to_weight, gr_vertex_to_neighbors, gr_n, gr_book_id_to_num_ratings, gr_book_id_to_text = get_goodreads_graph()
+
     with open('data/goodreads-book-id-to-sc-uri_full-matching.json', 'r') as f:
         goodreads_book_id_to_sc_uri = json.load(f)
 
@@ -104,7 +110,7 @@ def plot_relative_popularity_by_year(sc_books_in_vertex_order, gr_books_in_verte
                          style='point_types', markers=marker_dict, legend=False)
     sns.despine()
     ax.set_xlim([1800,1941])
-    ax.set_xlabel('Year', fontsize=14)
+    ax.set_xlabel('Publication Year', fontsize=14)
     ax.set_ylabel('log(SC/GR)', fontsize=14)
     
     gr_legend = matplotlib.lines.Line2D([], [], color=color_dict['gr'], marker=marker_dict['gr'], linestyle='None',
@@ -113,7 +119,7 @@ def plot_relative_popularity_by_year(sc_books_in_vertex_order, gr_books_in_verte
                               markersize=10, label='Much more popular in Shakespeare and Company')
     plt.legend(handles=[sc_legend, gr_legend])
 
-    savefig('relative-popularity-by-year.pdf', bbox_inches='tight')
+    savefig('relative-popularity-by-year.png', bbox_inches='tight', dpi=300)
     plt.close()
 
     # print extremes!
@@ -124,12 +130,5 @@ def plot_relative_popularity_by_year(sc_books_in_vertex_order, gr_books_in_verte
     for i, (ratio, year, title, author, text) in enumerate(sorted(zip(log_ratios, years, titles, authors, sc_texts), reverse=True)[:40]):
         print('{}\t{}\t{}\t{}'.format(i+1, year, title, author))
 
-def main():
-
-    # get the shakespeare and company graph!
-    sc_books_in_vertex_order, sc_book_to_vertex_index, sc_edge_to_weight, sc_vertex_to_neighbors, sc_n, sc_book_uri_to_num_events, sc_book_uri_to_text, sc_book_uri_to_year, sc_book_uri_to_title, sc_book_uri_to_author = get_sc_graph()
-
-    # and now get the goodreads graph!
-    gr_books_in_vertex_order, gr_book_to_vertex_index, gr_edge_to_weight, gr_vertex_to_neighbors, gr_n, gr_book_id_to_num_ratings, gr_book_id_to_text = get_goodreads_graph()
-
-    plot_relative_popularity_by_year(sc_books_in_vertex_order, gr_books_in_vertex_order, sc_book_to_vertex_index, gr_book_to_vertex_index, sc_edge_to_weight, gr_edge_to_weight, sc_book_uri_to_num_events, gr_book_id_to_num_ratings, sc_n, gr_n, sc_book_uri_to_text, gr_book_id_to_text, sc_book_uri_to_year, sc_book_uri_to_title, sc_book_uri_to_author)
+if __name__ == '__main__':
+    plot_relative_popularity_by_year()
