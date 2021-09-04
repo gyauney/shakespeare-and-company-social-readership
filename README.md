@@ -30,6 +30,8 @@ Please download the following files and place them in the `data` directory:
 - [`SCoData_members_v1.1_2021-01.json`](https://dataspace.princeton.edu/bitstream/88435/dsp01b5644v608/3/SCoData_members_v1.1_2021-01.json): the Shakespeare and Company members dataset
 - [`SCoData_events_v1.1_2021-01.json`](https://dataspace.princeton.edu/bitstream/88435/dsp012n49t475g/3/SCoData_events_v1.1_2021-01.json): the Shakespeare and Company events dataset
 
+We scraped the Goodreads meatadata using the [Goodreads Scraper](https://github.com/maria-antoniak/goodreads-scraper).
+
 
 ### Other included data
 
@@ -59,7 +61,9 @@ And finally dictionaries linking books across SC and Goodreads:
 
 ### Reproducing the results in the article
 
-1. **TODO**:
+0. Scripts in the `connect-to-goodreads` directory perform the initial matching between SC and Goodreads books. These rely on the Goodreads API, which is now deprecated.
+
+1. `popularity_plots.ipynb`:
 implements the article section "Comparing Popularity in SC and Goodreads".
 
 2. `plot-relative-popularity-by-year.py`:
