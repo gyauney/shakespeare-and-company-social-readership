@@ -2,6 +2,7 @@ from graph import get_goodreads_graph, get_sc_graph
 import json
 import numpy as np
 import math
+import os
 
 # don't let matplotlib use xwindows
 import matplotlib
@@ -11,6 +12,10 @@ from matplotlib.pylab import savefig
 import seaborn as sns
 sns.set_style("ticks")
 import pandas as pd
+
+output_directory_path = './figures'
+if not os.path.exists(output_directory_path):
+    os.makedirs(output_directory_path)
 
 def plot_relative_popularity_by_year():
 
@@ -114,7 +119,7 @@ def plot_relative_popularity_by_year():
                               markersize=10, label='Much more popular in Shakespeare and Company')
     plt.legend(handles=[sc_legend, gr_legend])
 
-    savefig('relative-popularity-by-year.png', bbox_inches='tight', dpi=300)
+    savefig('{}/relative-popularity-by-year.png'.format(output_directory_path), bbox_inches='tight', dpi=300)
     plt.close()
 
     # print extreme books

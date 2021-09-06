@@ -404,7 +404,7 @@ def get_goodreads_graph():
     book_to_vertex_index = {text: vertex_idx for vertex_idx, text in enumerate(books_in_vertex_order)}
 
     # now get popularity
-    gr_book_id_to_num_ratings = get_goodreads_popularity_num_ratings('data')
+    gr_book_id_to_num_ratings = get_goodreads_num_ratings()
 
     return books_in_vertex_order, book_to_vertex_index, edge_to_weight, vertex_to_neighbors, n, gr_book_id_to_num_ratings, goodreads_book_id_to_text
 
@@ -418,7 +418,7 @@ def count_events_per_book_sc(books, members, events):
     return book_to_num_events
 
 # get the number of ratings for matched goodreads books
-def get_goodreads_popularity_num_ratings(folder):
+def get_goodreads_num_ratings():
     with open('data/goodreads-book-id-to-num-ratings.json', 'r') as f:
         goodreads_book_id_to_num_ratings = json.load(f)
     return goodreads_book_id_to_num_ratings
