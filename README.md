@@ -22,13 +22,9 @@ We additionally consolidated Goodreads metadata for these matched works.
 pip3 install -r requirements.txt
 ```
 
-2. You will also need to clone the
+2. You will also need to download the
 [Bayesian Core-Periphery Stochastic Block Models](https://github.com/ryanjgallagher/core_periphery_sbm)
-utilities into this directory:
-
-```
-git clone https://github.com/ryanjgallagher/core_periphery_sbm.git
-```
+and place the directory `core_periphery_sbm` into the current directory.
 
 3. We additionally require version 1.1 of the data from the
 [Shakespare and Company Project](https://shakespeareandco.princeton.edu/about/data/).

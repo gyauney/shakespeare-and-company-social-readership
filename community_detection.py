@@ -1,3 +1,8 @@
+# An implementation of the community detection algorithm in
+# "An efficient and principled method for detecting communities in networks"
+# Brian Ball, Brian Karrer, M. E. J. Newman. 2011.
+# https://arxiv.org/abs/1104.3590
+
 import numpy as np
 from collections import OrderedDict
 
