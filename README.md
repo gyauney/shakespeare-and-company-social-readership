@@ -17,13 +17,20 @@ We additionally consolidated Goodreads metadata for these matched works.
 
 ### Code requirements
 
-This code needs Python 3 along with `numpy` and `networkx`.
-You can install the dependencies with:
+1. This code needs Python 3. You can install the other dependencies with:
 ```
 pip3 install -r requirements.txt
 ```
 
-It additionally requires Version 1.1 of the data from the
+2. You will also need to clone the
+[Bayesian Core-Periphery Stochastic Block Models](https://github.com/ryanjgallagher/core_periphery_sbm)
+utilities into this directory:
+
+```
+git clone https://github.com/ryanjgallagher/core_periphery_sbm.git
+```
+
+3. We additionally require version 1.1 of the data from the
 [Shakespare and Company Project](https://shakespeareandco.princeton.edu/about/data/).
 Please download the following files and place them in the `data` directory:
 - [`SCoData_books_v1.1_2021-01.json`](https://dataspace.princeton.edu/bitstream/88435/dsp016d570067j/3/SCoData_books_v1.1_2021-01.json): the Shakespeare and Company books dataset
