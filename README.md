@@ -27,11 +27,11 @@ pip3 install -r requirements.txt
 and place the directory `core_periphery_sbm` into the current directory.
 
 3. We additionally require version 1.1 of the data from the
-[Shakespare and Company Project](https://shakespeareandco.princeton.edu/about/data/).
+[Shakespeare and Company Project](https://shakespeareandco.princeton.edu/about/data/).
 Please download the following files and place them in the `data` directory:
-- [`SCoData_books_v1.1_2021-01.json`](https://dataspace.princeton.edu/bitstream/88435/dsp016d570067j/3/SCoData_books_v1.1_2021-01.json): the Shakespeare and Company books dataset
-- [`SCoData_members_v1.1_2021-01.json`](https://dataspace.princeton.edu/bitstream/88435/dsp01b5644v608/3/SCoData_members_v1.1_2021-01.json): the Shakespeare and Company members dataset
-- [`SCoData_events_v1.1_2021-01.json`](https://dataspace.princeton.edu/bitstream/88435/dsp012n49t475g/3/SCoData_events_v1.1_2021-01.json): the Shakespeare and Company events dataset
+- [`SCoData_books_v1.1_2021_01.json`](https://dataspace.princeton.edu/bitstream/88435/dsp016d570067j/3/): the Shakespeare and Company books dataset
+- [`SCoData_members_v1.1_2021_01.json`](https://dataspace.princeton.edu/bitstream/88435/dsp01b5644v608/3/): the Shakespeare and Company members dataset
+- [`SCoData_events_v1.1_2021_01.json`](https://dataspace.princeton.edu/bitstream/88435/dsp012n49t475g/3/): the Shakespeare and Company events dataset
 
 We scraped the Goodreads metadata using the [Goodreads Scraper](https://github.com/maria-antoniak/goodreads-scraper).
 

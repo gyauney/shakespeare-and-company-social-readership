@@ -1,0 +1,12 @@
+# API Keys
+config_secrets.py
+
+# scraps
+popularity_plots-with-interactive.ipynb
+
+# data
+SCoData_books_v1.1_2021_01.json
+SCoData_members_v1.1_2021_01.json
+SCoData_events_v1.1_2021_01.json
+
+
